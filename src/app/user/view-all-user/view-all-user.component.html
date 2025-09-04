@@ -5,7 +5,7 @@
         <table id="User" class="table table-striped table-bordered table-hover text-center">
             <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>Sr No</th>
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>Contact</th>
@@ -15,9 +15,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let user of userData" [class.inactive-user]="!user.IsActive">
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.firstName + ' ' + user.lastName }}</td>
+                <tr *ngFor="let user of userData; let i = index" [class.inactive-user]="!user.IsActive">
+                    <td>{{ i+1 }}</td>
+                    <td>
+                        <a [routerLink]="['/admin/view-user', user.id]" class="text-decoration-none">
+                            {{ user.firstName + ' ' + user.lastName }}
+                        </a>
+                    </td>
                     <td>{{ user.credential.email }}</td>
                     <TD>{{ user.phoneNo}}</TD>
                     <td>{{ user.isAdmin ? 'ADMIN' : 'USER' }}</td>
@@ -30,16 +34,11 @@
                             <button class="btn btn-sm btn-warning" title="Disable" (click)="onDisableClick(user.id)">
                                 <i class="fas fa-user-slash"></i>
                             </button>
-
                             &nbsp;
-
-
                             <button class="btn btn-sm btn-primary" title="Edit" (click)="onUpdateClick(user.id)">
                                 <i class="fas fa-edit"></i>
                             </button>
-
                             &nbsp;
-
                             <button class="btn btn-sm btn-danger" title="Delete" (click)="onDeleteClick(user.id)">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
@@ -51,10 +50,7 @@
                             <button class="btn btn-sm btn-success" title="Revive" (click)="onReviveClick(user.id)">
                                 <i class="fas fa-redo-alt"></i>
                             </button>
-
                             &nbsp;
-
-
                             <button class="btn btn-sm btn-secondary" title="Edit (Disabled)" disabled>
                                 <i class="fas fa-edit"></i>
                             </button>

@@ -49,7 +49,7 @@ export class AddUserComponent {
       response => {
         console.log('POST request successful:', response);
         alert("User registered successfully");
-        this.router.navigate(['/admin/dashboard']);
+        this.router.navigate(['/admin/view-all-users']);
       },
       error => {
         console.error('POST request error:', error);

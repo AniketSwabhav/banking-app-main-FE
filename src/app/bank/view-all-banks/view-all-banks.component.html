@@ -1,1 +1,72 @@
-<p>view-all-banks works!</p>
+<h3 class="title text-center mt-5 mb-4">All Registered Users</h3>
+
+<div class="container">
+    <div class="text-center mb-4">
+        <table id="User" class="table table-striped table-bordered table-hover text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Sr No</th>
+                    <th>Full Name</th>
+                    <th>Abbreviation</th>
+                    <!-- <th>Contact</th>
+                    <th>Role</th>
+                    <th>Total Balance</th> -->
+                    <th>Operations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of userData; let i=index" [class.inactive-user]="!user.IsActive">
+                    <td>{{ i+1 }}</td>
+                    <td>{{ user.fullName }}</td>
+                    <td>{{ user.abbreviation }}</td>
+                    <!-- <TD>{{ user.phoneNo}}</TD>
+                    <td>{{ user.isAdmin ? 'ADMIN' : 'USER' }}</td>
+                    <td>{{ user.totalBalance}}</td> -->
+
+                    <!-- SINGLE Operations Column -->
+                    <td>
+                        <ng-container *ngIf="user.isActive; else reviveTemplate">
+
+                            <button class="btn btn-sm btn-warning" title="Disable" (click)="onDisableClick(user.id)">
+                                <i class="fas fa-user-slash"></i>
+                            </button>
+
+                            &nbsp;
+
+
+                            <button class="btn btn-sm btn-primary" title="Edit" (click)="onUpdateClick(user.id)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+                            &nbsp;
+
+                            <button class="btn btn-sm btn-danger" title="Delete" (click)="onDeleteClick(user.id)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+
+                        </ng-container>
+
+                        <ng-template #reviveTemplate>
+
+                            <button class="btn btn-sm btn-success" title="Revive" (click)="onReviveClick(user.id)">
+                                <i class="fas fa-redo-alt"></i>
+                            </button>
+
+                            &nbsp;
+
+
+                            <button class="btn btn-sm btn-secondary" title="Edit (Disabled)" disabled>
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </ng-template>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+
+        <app-pagination class=" p-0 m-0" [items]="userData"
+            [totalItems]='selectedButtonIndex ? userCount : totalBankRecords' [limit]="limit" [offset]="offset"
+            (pageChange)="changePage($event)" />
+    </div>
+</div>

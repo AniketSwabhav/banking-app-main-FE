@@ -1,0 +1,49 @@
+<div class="container mt-4" *ngIf="user">
+    <div class="mt-3">
+        <button class="btn btn-primary" (click)="goBack()">Back to All Users</button>
+    </div>
+    <br>
+    <h3 class="mb-3">User Details</h3>
+    <div class="card p-3 mb-4">
+        <p><strong>Full Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
+        <p><strong>Email:</strong> {{ user.credential?.email }}</p>
+        <p><strong>Phone Number:</strong> {{ user.phoneNo }}</p>
+        <p><strong>Role:</strong> {{ user.isAdmin ? 'Admin' : 'User' }}</p>
+        <p><strong>Status:</strong> {{ user.isActive ? 'Active' : 'Disabled' }}</p>
+        <p><strong>Total Balance:</strong> ₹{{ user.totalBalance }}</p>
+    </div>
+
+
+    <h4 class="mb-2">Accounts</h4>
+
+    <div *ngIf="user.accounts && user.accounts.length > 0; else noAccounts">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Account Number</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let acc of user.accounts; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ acc.accountNo }}</td>
+                    <td>₹{{ acc.balance }}</td>
+                    <td>{{ acc.isActive ? 'Active' : 'Disabled' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+     <!-- <app-pagination class=" p-0 m-0" [items]="accountData"
+            [totalItems]='selectedButtonIndex ? accountCount : totalAccountRecords' [limit]="limit" [offset]="offset"
+            (pageChange)="changePage($event)" /> -->
+
+
+    <ng-template #noAccounts>
+        <p class="text-muted mt-2">This user has no accounts yet.</p>
+    </ng-template>
+
+</div>
