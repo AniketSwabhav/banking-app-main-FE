@@ -1,0 +1,72 @@
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Your Accounts</h2>
+
+    <!-- Bank Dropdown & Add Account Button -->
+    <div class="row mb-4 justify-content-center align-items-center">
+        <div class="col-md-6">
+            <select class="form-select" [(ngModel)]="selectedBankId">
+                <option value="" disabled>Select a bank</option>
+                <option *ngFor="let bank of banks" [value]="bank.id">
+                    {{ bank.fullName }}
+                </option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-success" [disabled]="!selectedBankId" (click)="addAccount()">
+                Add Account
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="alert alert-danger text-center">
+        {{ error }}
+    </div>
+
+    <!-- No accounts -->
+    <div *ngIf="!loading && accounts.length === 0" class="alert alert-secondary text-center">
+        No accounts found.
+    </div>
+
+    <app-pagination class=" p-0 m-0" [items]="accounts"
+        [totalItems]='selectedButtonIndex ? totalAccountRecords : totalAccountRecords' [limit]="limit" [offset]="offset"
+        (pageChange)="changePage($event)" />
+
+    <!-- Accounts list -->
+<div *ngFor="let account of accounts" class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Account No: {{ account.accountNo }}</h5>
+        <p class="card-text mb-1"><strong>Bank:</strong> {{ account.bank?.fullName }}</p>
+        <p class="card-text mb-1"><strong>Balance:</strong> ₹{{ account.balance }}</p>
+        <p class="card-text mb-3">
+            <strong>Status:</strong>
+            <span class="badge" [ngClass]="account.isActive ? 'bg-success' : 'bg-danger'">
+                {{ account.isActive ? 'Active' : 'Inactive' }}
+            </span>
+        </p>
+        
+        <!-- Buttons -->
+        <div class="d-flex gap-2 flex-wrap">
+            <button class="btn btn-outline-primary" (click)="goToPassbook(account.id)">
+                View Passbook
+            </button>
+            <button class="btn btn-outline-success" (click)="goToDeposit()">
+                Deposit
+            </button>
+            <button class="btn btn-outline-warning" (click)="goToWithdraw()">
+                Withdraw
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+</div>

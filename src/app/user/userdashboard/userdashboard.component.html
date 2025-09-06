@@ -1,1 +1,51 @@
-<p>userdashboard works!</p>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+
+      <div *ngIf="user; else loading">
+        <h2 class="title text-center mt-5 mb-4">Welcome, {{ user.firstName }} {{ user.lastName }}</h2>
+        <br>
+        <p><strong>Email:</strong> {{ user.credential.email }}</p>
+        <p><strong>Phone:</strong> {{ user.phoneNo }}</p>
+        <p><strong>Total Balance:</strong> ₹{{ user.totalBalance }}</p>
+        <p><strong>Status:</strong> {{ user.isActive ? 'Active' : 'Inactive' }}</p>
+        <!-- <p><strong>Admin:</strong> {{ user.isAdmin ? 'Yes' : 'No' }}</p> -->
+
+        <hr />
+        <h3>Accounts</h3>
+
+        <!-- Check if user.accounts exists and has any items -->
+        <ng-container *ngIf="user.accounts?.length > 0; else noAccounts">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Account No</th>
+                <th>Bank</th>
+                <th>Balance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let account of user.accounts">
+                <td>{{ account.accountNo }}</td>
+                <td>{{ account.bank.fullName}}</td>
+                <td>₹{{ account.balance }}</td>
+                <td>{{ account.isActive ? 'Active' : 'Inactive' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+
+        <!-- Template to show if no accounts -->
+        <ng-template #noAccounts>
+          <p class="text-muted mt-2">This user has no accounts yet.</p>
+        </ng-template>
+      </div>
+
+      <ng-template #loading>
+        <p>Loading user data...</p>
+      </ng-template>
+
+    </div>
+  </div>
+</div>

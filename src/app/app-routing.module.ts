@@ -10,22 +10,36 @@ import { ViewAllBanksComponent } from './bank/view-all-banks/view-all-banks.comp
 import { UpdateBankComponent } from './bank/update-bank/update-bank.component';
 import { AddBankComponent } from './bank/add-bank/add-bank.component';
 import { ViewUserComponent } from './user/view-user/view-user.component';
+import { ViewBankComponent } from './bank/view-bank/view-bank.component';
+import { ViewAllAccountsComponent } from './account/view-all-accounts/view-all-accounts.component';
+import { PassbookComponent } from './account/passbook/passbook.component';
+import { DepositeComponent } from './account/deposite/deposite.component';
+import { WithdrawComponent } from './account/withdraw/withdraw.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
 
   { path: 'admin/dashboard', component: AdmindashboardComponent },
-  { path: 'admin/adduser', component: AddUserComponent},
-  { path: 'admin/view-all-users', component: ViewAllUserComponent},
-  { path: 'admin/view-user/:id', component: ViewUserComponent},
-  { path: 'admin/view-all-banks', component: ViewAllBanksComponent},
-  { path: 'admin/addbank', component: AddBankComponent},
-  { path: 'bank/update/:id', component: UpdateBankComponent},
+  { path: 'admin/adduser', component: AddUserComponent },
+  { path: 'admin/view-user/:id', component: ViewUserComponent },
+  { path: 'admin/view-all-users', component: ViewAllUserComponent },
+
+  { path: 'user/update/:id', component: UpdateUserComponent },
+
+  { path: 'admin/addbank', component: AddBankComponent },
+  { path: 'admin/view-bank/:id', component: ViewBankComponent },
+  { path: 'admin/view-all-banks', component: ViewAllBanksComponent },
+  { path: 'bank/update/:id', component: UpdateBankComponent },
+
+  { path: 'user/view-all-accounts', component: ViewAllAccountsComponent },
+
 
   { path: 'user/dashboard', component: UserdashboardComponent },
-  { path: 'user/update/:id', component: UpdateUserComponent}
-  
+  { path: 'user/account/passbook/:accountId', component: PassbookComponent },
+  { path: 'user/account/deposite', component: DepositeComponent },
+  { path: 'user/account/withdraw', component: WithdrawComponent }
+
 ];
 
 @NgModule({

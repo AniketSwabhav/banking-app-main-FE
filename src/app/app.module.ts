@@ -6,9 +6,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
+import { ViewBankComponent } from './bank/view-bank/view-bank.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ViewBankComponent],
   imports: [HttpClientModule ,BrowserModule,NavbarComponent, AppRoutingModule],
   providers: [ JwtHelperService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }],

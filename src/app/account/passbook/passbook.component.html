@@ -1,0 +1,38 @@
+<div class="container mt-4">
+    <div class="mt-3">
+        <button class="btn btn-primary" (click)="goBack()">Back to All Accounts</button>
+    </div>
+
+    <h3>Passbook</h3>
+
+    <app-pagination class=" p-0 m-0" [items]="passbookEntries"
+        [totalItems]='selectedButtonIndex ? totalPassbookRecords : totalPassbookRecords' [limit]="limit"
+        [offset]="offset" (pageChange)="changePage($event)" />
+
+    <table class="table table-bordered mt-3" *ngIf="passbookEntries.length > 0; else noData">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let entry of passbookEntries">
+                <td>{{ entry.timeStamp | date:'medium' }}</td>
+                <td>{{ entry.type }}</td>
+                <td [ngClass]="{ 'text-success': entry.amount > 0, 'text-danger': entry.amount < 0 }">
+                    {{ entry.amount }}
+                </td>
+                <td>{{ entry.balance }}</td>
+                <td>{{ entry.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-template #noData>
+        <p>No passbook entries found.</p>
+    </ng-template>
+</div>

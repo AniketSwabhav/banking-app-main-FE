@@ -29,16 +29,15 @@
 
         <!-- User-specific links -->
         <li *ngIf="isAuthenticated && !isAdmin" class="nav-item">
-          <a class="nav-link" routerLink="/user/dashboard">User Dashboard</a>
+          <a class="nav-link" routerLink="/user/dashboard">Dashboard</a>
         </li>
         <li *ngIf="isAuthenticated && !isAdmin" class="nav-item">
-          <a class="nav-link" routerLink="/user/view">View Profile</a>
+          <a class="nav-link" routerLink="user/view-all-accounts">Accounts</a>
         </li>
         <li *ngIf="isAuthenticated && !isAdmin" class="nav-item">
           <a class="nav-link" routerLink="/user/contact">Manage Contacts</a>
         </li>
 
-        
         <li *ngIf="isAuthenticated" class="nav-item">
           <a class="nav-link" (click)="logout()">Logout</a>
         </li>

@@ -7,22 +7,13 @@ import { PaginationComponent } from 'src/app/shared/pagination/pagination.compon
 @Component({
   selector: 'app-view-user',
   standalone: true,
-  imports: [CommonModule, PaginationComponent],
+  imports: [CommonModule],
   templateUrl: './view-user.component.html',
   styleUrls: ['./view-user.component.css']
 })
 export class ViewUserComponent implements OnInit {
   userId: string = '';
   user: any;
-
-  // accountData: any = [];
-  // selectedButtonIndex: number | null = null;
-  // limit: number = 5
-  // offset: number = 0
-  // currentPage: number = 0;
-  // accountCount: number = 0;
-  // totalAccountRecords: number = 0;
-
 
   constructor(
     private route: ActivatedRoute,
@@ -46,15 +37,6 @@ export class ViewUserComponent implements OnInit {
       });
     }
   }
-
-  //   changePage(pageNumber: number): void {
-  //   console.log(pageNumber);
-
-  //   this.currentPage = pageNumber - 1;
-  //   this.offset = (pageNumber - 1);
-  //   console.log(pageNumber, this.offset);
-  //   this.loadAccounts();
-  // }
 
   goBack() {
     this.location.back();

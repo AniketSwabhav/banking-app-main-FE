@@ -17,18 +17,14 @@ export class ViewAllUserComponent implements OnInit {
 
   userData: any = [];
   userCount: number = 0;
-
-
-  //  //Forms
-  // searchForm!: FormGroup
-  // searchFormValue: any = null
-  selectedButtonIndex: number | null = null;
+  
 
   //Pagination
   limit: number = 5
   offset: number = 0
   currentPage: number = 0
   totalUserRecords: number = 0
+  selectedButtonIndex: number | null = null;
 
   constructor(
     private router: Router,
@@ -68,7 +64,6 @@ export class ViewAllUserComponent implements OnInit {
   }
 
   onUpdateClick(userID: string) {
-    console.log("from view, id: ", userID);
     this.router.navigate(['/user/update', userID]);
   }
 

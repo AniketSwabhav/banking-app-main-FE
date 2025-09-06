@@ -1,4 +1,4 @@
-<h3 class="title text-center mt-5 mb-4">All Registered Users</h3>
+<h3 class="title text-center mt-5 mb-4">All Registered Banks</h3>
 
 <div class="container">
     <div class="text-center mb-4">
@@ -17,7 +17,12 @@
             <tbody>
                 <tr *ngFor="let user of userData; let i=index" [class.inactive-user]="!user.IsActive">
                     <td>{{ i+1 }}</td>
-                    <td>{{ user.fullName }}</td>
+                    <td>
+                    <a [routerLink]="['/admin/view-bank', user.id]" class="text-decoration-none">
+                        {{ user.fullName }}
+                    </a>
+                    </td>
+                    <!-- <td>{{ user.fullName }}</td> -->
                     <td>{{ user.abbreviation }}</td>
                     <!-- <TD>{{ user.phoneNo}}</TD>
                     <td>{{ user.isAdmin ? 'ADMIN' : 'USER' }}</td>
