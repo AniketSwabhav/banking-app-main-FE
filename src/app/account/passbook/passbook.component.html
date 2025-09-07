@@ -1,9 +1,13 @@
 <div class="container mt-4">
-    <div class="mt-3">
+    <!-- <div class="mt-3">
         <button class="btn btn-primary" (click)="goBack()">Back to All Accounts</button>
-    </div>
+    </div> -->
+
+    <app-custom-back-button buttonClass="btn btn-default p-0" iconClass="inline-icon" />
 
     <h3>Passbook</h3>
+
+
 
     <app-pagination class=" p-0 m-0" [items]="passbookEntries"
         [totalItems]='selectedButtonIndex ? totalPassbookRecords : totalPassbookRecords' [limit]="limit"

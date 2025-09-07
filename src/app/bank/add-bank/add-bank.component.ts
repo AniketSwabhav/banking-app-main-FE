@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BankService } from 'src/app/service/bank.service';
 
 @Component({
@@ -19,30 +19,14 @@ export class AddBankComponent {
     ) { }
   
     addBank = new FormGroup({
-      fullName: new FormControl(''),
-      // lastName: new FormControl(''),
-      // phoneNo: new FormControl(''),
-      // Email: new FormControl(''),
-      // passWord: new FormControl(''),
-    });
-  
-    // showPassword: boolean = false;
-  
-    // togglePasswordVisibility() {
-    //   this.showPassword = !this.showPassword;
-    // }
+       fullName: new FormControl('', [Validators.required,Validators.maxLength(50),Validators.pattern(/^[a-zA-Z ]+$/)])
+      });
   
     getUserFormData() {
       const rawData = this.addBank.value;
   
       const formattedRequest = {
         fullName: rawData.fullName,
-        // lastName: rawData.lastName,
-        // phoneNo: rawData.phoneNo,
-        // credential: {
-        //   email: rawData.Email,
-        //   password: rawData.passWord
-        // }
       };
   
       this.bankData.saveBank(formattedRequest).subscribe(

@@ -1,0 +1,53 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-4">Transfer Money</h3>
+
+          <form [formGroup]="transferForm" (ngSubmit)="getUserFormData()">
+
+            <!-- Receiver Account No -->
+            <div class="mb-3">
+              <label for="toAccountNo" class="form-label">Receiver's Account Number</label>
+              <input type="text" class="form-control" id="toAccountNo" formControlName="toAccountNo"
+                placeholder="Enter account number" required />
+              <div class="text-danger mt-1"
+                *ngIf="transferForm.get('toAccountNo')?.touched && transferForm.get('toAccountNo')?.invalid">
+                <div *ngIf="transferForm.get('toAccountNo')?.errors?.['required']">Account number is required.</div>
+                <div *ngIf="transferForm.get('toAccountNo')?.errors?.['pattern']">Only digits are allowed.</div>
+                <div *ngIf="transferForm.get('toAccountNo')?.errors?.['minlength']">Must be at least 12 digits.</div>
+                <div *ngIf="transferForm.get('toAccountNo')?.errors?.['maxlength']">Must not exceed 18 digits.</div>
+              </div>
+
+            </div>
+
+            <!-- Amount -->
+            <div class="mb-3">
+              <label for="amount" class="form-label">Amount</label>
+              <input type="number" class="form-control" id="amount" formControlName="amount"
+                placeholder="Enter amount to transfer" required />
+              <div class="text-danger mt-1"
+                *ngIf="transferForm.get('amount')?.touched && transferForm.get('amount')?.invalid">
+                <div *ngIf="transferForm.get('amount')?.errors?.['required']">Amount is required.</div>
+                <div *ngIf="transferForm.get('amount')?.errors?.['pattern']">Only whole numbers are allowed.</div>
+                <div *ngIf="transferForm.get('amount')?.errors?.['min']">Amount must be at least ₹1.</div>
+              </div>
+
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary" (click)="goBack()">
+                Back
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="transferForm.invalid">
+                Transfer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

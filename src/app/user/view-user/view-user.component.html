@@ -24,6 +24,7 @@
                     <th>Account Number</th>
                     <th>Balance</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,12 +33,18 @@
                     <td>{{ acc.accountNo }}</td>
                     <td>₹{{ acc.balance }}</td>
                     <td>{{ acc.isActive ? 'Active' : 'Disabled' }}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-info" (click)="viewPassbook(acc.id)">
+                            <i class="bi bi-journal-text me-1"></i> View Passbook
+                        </button>
+                    </td>
+
                 </tr>
             </tbody>
         </table>
     </div>
 
-     <!-- <app-pagination class=" p-0 m-0" [items]="accountData"
+    <!-- <app-pagination class=" p-0 m-0" [items]="accountData"
             [totalItems]='selectedButtonIndex ? accountCount : totalAccountRecords' [limit]="limit" [offset]="offset"
             (pageChange)="changePage($event)" /> -->
 

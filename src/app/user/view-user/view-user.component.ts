@@ -38,6 +38,10 @@ export class ViewUserComponent implements OnInit {
     }
   }
 
+  viewPassbook(accountID: string) {
+    this.router.navigate(['user/account', accountID, 'passbook']);
+  }
+
   goBack() {
     this.location.back();
   }

@@ -1,27 +1,37 @@
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Withdraw Funds</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-4">Withdraw Amount</h3>
 
-  <!-- <form (ngSubmit)="onWithdraw()" #withdrawForm="ngForm" class="w-50 mx-auto">
-    <div class="mb-3">
-      <label for="amount" class="form-label">Amount to Withdraw</label>
-      <input
-        type="number"
-        id="amount"
-        name="amount"
-        [(ngModel)]="amount"
-        required
-        min="1"
-        class="form-control"
-        placeholder="Enter amount"
-      />
+          <form [formGroup]="addAmount" (ngSubmit)="getUserFormData()">
+            
+            <!-- Amount Input -->
+            <div class="mb-3">
+              <label for="amount" class="form-label">Amount</label>
+              <input type="number" class="form-control" id="amount" formControlName="amount"
+                placeholder="Enter amount to withdraw" required />
+              <div class="text-danger mt-1"
+                *ngIf="addAmount.get('amount')?.touched && addAmount.get('amount')?.invalid">
+                <div *ngIf="addAmount.get('amount')?.errors?.['required']">Amount is required.</div>
+                <div *ngIf="addAmount.get('amount')?.errors?.['pattern']">Only numbers are allowed.</div>
+                <div *ngIf="addAmount.get('amount')?.errors?.['min']">Amount must be at least ₹1.</div>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary" (click)="goBack()">
+                Back
+              </button>
+              <button type="submit" class="btn btn-warning" [disabled]="addAmount.invalid">
+                Withdraw
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <button type="submit" class="btn btn-warning w-100" [disabled]="!withdrawForm.form.valid">
-      Withdraw
-    </button>
-
-    <button class="btn btn-secondary w-100 mt-2" (click)="goBack()" type="button">
-      Cancel
-    </button>
-  </form> -->
+  </div>
 </div>

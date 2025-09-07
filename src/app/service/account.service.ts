@@ -23,10 +23,50 @@ export class AccountService {
       { headers: this.getAuthHeaders(), params: params, observe: "response" });
   }
 
- createAccount(bankId: string): Observable<any> {
-  const url = `${this.URL}/bank/${bankId}`;
-  const headers = this.getAuthHeaders();
-  return this.http.post<any>(url, {}, { headers }); 
-}
+  createAccount(bankId: string): Observable<any> {
+    const url = `${this.URL}/bank/${bankId}`;
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(url, {}, { headers });
+  }
+
+  viewAccount(id: string) {
+    const url = `${this.URL}/${id}`;
+    const headers = this.getAuthHeaders();
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateAccount(id: string, data: any): Observable<any> {
+    const url = `${this.URL}/${id}`;
+    const headers = this.getAuthHeaders();
+    return this.http.put<any>(url, data, { headers });
+  }
+
+  deleteAccount(accountId: string): Observable<any> {
+    const url = `${this.URL}/${accountId}`;
+    return this.http.delete<any>(url, { headers: this.getAuthHeaders() });
+  }
+
+  reactivateAccount(accountId: string): Observable<any> {
+    const url = `${this.URL}/${accountId}/reactivate`;
+    return this.http.put<any>(url, {}, { headers: this.getAuthHeaders() });
+  }
+
+  withdraw(accountId: string, data: any): Observable<any> {
+    const url = `${this.URL}/${accountId}/withdraw`;
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(url, data, { headers });
+  }
+
+  deposite(accountId: string, data: any): Observable<any> {
+    const url = `${this.URL}/${accountId}/deposite`;
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(url, data, { headers });
+  }
+
+  transfer(accountId: string, data: any): Observable<any> {
+    const url = `${this.URL}/${accountId}/transfer`;
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(url, data, { headers });
+  }
 
 }

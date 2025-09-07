@@ -5,11 +5,12 @@ import { PassbookService } from 'src/app/service/passbook.service';
 import { PaginatePipe } from 'ngx-pagination';
 import { PaginationComponent } from 'src/app/shared/pagination/pagination.component';
 import { HttpParams } from '@angular/common/http';
+import { CustomBackButtonComponent } from 'src/app/shared/custom-back-button/custom-back-button.component';
 
 @Component({
   selector: 'app-passbook',
   standalone: true,
-  imports: [CommonModule, PaginationComponent],
+  imports: [CommonModule, PaginationComponent, CustomBackButtonComponent],
   templateUrl: './passbook.component.html',
   styleUrls: ['./passbook.component.css']
 })
@@ -52,7 +53,7 @@ export class PassbookComponent implements OnInit {
     
     this.accountId = this.route.snapshot.paramMap.get('accountId') || '';
     if (this.accountId) {
-      this.passbookservice.viewPassBook(this.accountId).subscribe({
+      this.passbookservice.viewPassBook(this.accountId, params).subscribe({
         next: (data: any) => {
           this.passbookEntries = data.body || [];
           this.totalPassbookRecords = parseInt(data.headers.get("X-Total-Count"));
@@ -67,13 +68,12 @@ export class PassbookComponent implements OnInit {
 
   }
 
-  goBack() {
-    this.location.back();
-  }
+  // goBack() {
+  //  this.router.navigate(['/user/view-all-accounts']);
+  // }
 
   changePage(pageNumber: number): void {
     console.log(pageNumber);
-
     this.currentPage = pageNumber - 1;
     this.offset = (pageNumber - 1);
     console.log(pageNumber, this.offset);

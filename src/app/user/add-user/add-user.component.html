@@ -8,37 +8,64 @@
 
                     <form [formGroup]="addUser" (ngSubmit)="getUserFormData()">
 
+                        <!-- First Name -->
                         <div class="mb-3">
                             <label for="fname" class="form-label">First Name</label>
                             <input type="text" id="fname" class="form-control" formControlName="firstName"
                                 placeholder="Enter your first name" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="lname" class="form-label">Last Name</label>
-                            <input type="text" id="lname" class="form-control" formControlName="lastName"
-                                placeholder="Enter your last name" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="lname" class="form-label"><strong><span class="red"></span> Phone
-                                    Number</strong></label>
-                            <input type="text" id="pNumber" class="form-control" formControlName="phoneNo"
-                                placeholder="eg: 9123456780" />
-                            <div class="alert alert-danger" *ngIf="(addUser.get('phoneNo')?.touched || addUser.get('phoneNo')?.dirty)
-                                                   && addUser.get('phoneNo')?.invalid">
-                                <div *ngIf="addUser.get('phoneNo')?.errors?.['pattern']">
-                                    Contact must be a valid 10-digit number
+                            <div *ngIf="addUser.get('firstName')?.touched && addUser.get('firstName')?.invalid"
+                                class="alert alert-danger mt-1 p-2">
+                                <div *ngIf="addUser.get('firstName')?.errors?.['required']">First name is required.
+                                </div>
+                                <div
+                                    *ngIf="addUser.get('firstName')?.errors?.['maxLength'] || addUser.get('firstName')?.errors?.['maxlength']">
+                                    First name must be less than 50 characters.
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Last Name -->
+                        <div class="mb-3">
+                            <label for="lname" class="form-label">Last Name</label>
+                            <input type="text" id="lname" class="form-control" formControlName="lastName"
+                                placeholder="Enter your last name" />
+                            <div *ngIf="addUser.get('lastName')?.touched && addUser.get('lastName')?.invalid"
+                                class="alert alert-danger mt-1 p-2">
+                                <div *ngIf="addUser.get('lastName')?.errors?.['required']">Last name is required.</div>
+                                <div
+                                    *ngIf="addUser.get('lastName')?.errors?.['maxLength'] || addUser.get('lastName')?.errors?.['maxlength']">
+                                    Last name must be less than 50 characters.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label for="pNumber" class="form-label"><strong>Phone Number</strong></label>
+                            <input type="tel" id="pNumber" class="form-control" formControlName="phoneNo" maxlength="10"
+                                placeholder="eg: 9123456780" (input)="onPhoneInput($event)" />
+                            <div *ngIf="addUser.get('phoneNo')?.touched && addUser.get('phoneNo')?.invalid"
+                                class="alert alert-danger mt-1 p-2">
+                                <div *ngIf="addUser.get('phoneNo')?.errors?.['required']">Phone number is required.
+                                </div>
+                                <div *ngIf="addUser.get('phoneNo')?.errors?.['pattern']">Enter a valid 10-digit number.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
                             <input type="email" id="email" class="form-control" formControlName="Email"
                                 placeholder="Enter your email" />
+                            <div *ngIf="addUser.get('Email')?.touched && addUser.get('Email')?.invalid"
+                                class="alert alert-danger mt-1 p-2">
+                                <div *ngIf="addUser.get('Email')?.errors?.['required']">Email is required.</div>
+                                <div *ngIf="addUser.get('Email')?.errors?.['email']">Enter a valid email address.</div>
+                            </div>
                         </div>
 
+                        <!-- Password -->
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <div class="input-group">
@@ -49,15 +76,23 @@
                                     <i class="fa {{ showPassword ? 'fa-eye-slash' : 'fa-eye' }}"></i>
                                 </span>
                             </div>
+                            <div *ngIf="addUser.get('passWord')?.touched && addUser.get('passWord')?.invalid"
+                                class="alert alert-danger mt-1 p-2">
+                                <div *ngIf="addUser.get('passWord')?.errors?.['required']">Password is required.</div>
+                                <div *ngIf="addUser.get('passWord')?.errors?.['minlength']">Minimum 6 characters
+                                    required.</div>
+                            </div>
                         </div>
 
+                        <!-- Buttons -->
                         <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-success">Register</button>
+                            <button type="submit" class="btn btn-success" [disabled]="addUser.invalid">Register</button>
                             <button type="reset" class="btn btn-outline-secondary">Reset</button>
                             <a routerLink="/admin/view-all-users" class="btn btn-outline-primary">
                                 <i class="fa fa-angle-double-left"></i> Back
                             </a>
                         </div>
+
 
                     </form>
 

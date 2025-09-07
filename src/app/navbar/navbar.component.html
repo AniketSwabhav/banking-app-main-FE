@@ -26,6 +26,9 @@
          <li *ngIf="isAuthenticated && isAdmin" class="nav-item">
           <a class="nav-link" routerLink="/admin/addbank">Add Bank</a>
         </li>
+         <li *ngIf="isAuthenticated && isAdmin" class="nav-item">
+          <a class="nav-link" routerLink="admin/bank/settlement">Settlements</a>
+        </li>
 
         <!-- User-specific links -->
         <li *ngIf="isAuthenticated && !isAdmin" class="nav-item">
@@ -34,10 +37,6 @@
         <li *ngIf="isAuthenticated && !isAdmin" class="nav-item">
           <a class="nav-link" routerLink="user/view-all-accounts">Accounts</a>
         </li>
-        <li *ngIf="isAuthenticated && !isAdmin" class="nav-item">
-          <a class="nav-link" routerLink="/user/contact">Manage Contacts</a>
-        </li>
-
         <li *ngIf="isAuthenticated" class="nav-item">
           <a class="nav-link" (click)="logout()">Logout</a>
         </li>

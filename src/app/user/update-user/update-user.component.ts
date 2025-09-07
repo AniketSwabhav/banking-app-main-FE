@@ -24,7 +24,7 @@ export class UpdateUserComponent{
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.userIDtoUpdate = params.get('id');
+      this.userIDtoUpdate = params.get('userId');
       console.log('Received ID:', this.userIDtoUpdate);
       this.userData.viewUser(this.userIDtoUpdate).subscribe((data) => {
         this.user = data;

@@ -24,15 +24,12 @@ export class UpdateBankComponent {
   
     ngOnInit() {
       this.route.paramMap.subscribe(params => {
-        this.bankIDtoUpdate = params.get('id');
+        this.bankIDtoUpdate = params.get('bankId');
         console.log('Received ID:', this.bankIDtoUpdate);
         this.bankData.viewBank(this.bankIDtoUpdate).subscribe((data) => {
           this.bank = data;
           this.updateUser.patchValue({
             fullName: this.bank.fullName,
-            // lastName: this.user.lastName,
-            // phoneNo: this.user.phoneNo,
-            // isAdmin: this.user.isAdmin,
             isActive: this.bank.isActive,
           });
         });
@@ -41,9 +38,6 @@ export class UpdateBankComponent {
   
     updateUser = new FormGroup({
       fullName: new FormControl(''),
-      // lastName: new FormControl(''),
-      // phoneNo: new FormControl(''),
-      // isAdmin: new FormControl(),
       isActive: new FormControl(),
     });
   

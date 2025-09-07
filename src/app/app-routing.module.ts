@@ -15,6 +15,9 @@ import { ViewAllAccountsComponent } from './account/view-all-accounts/view-all-a
 import { PassbookComponent } from './account/passbook/passbook.component';
 import { DepositeComponent } from './account/deposite/deposite.component';
 import { WithdrawComponent } from './account/withdraw/withdraw.component';
+import { TransferComponent } from './account/transfer/transfer.component';
+import { SettlementComponent } from './settlement/settlement.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,21 +27,21 @@ const routes: Routes = [
   { path: 'admin/adduser', component: AddUserComponent },
   { path: 'admin/view-user/:id', component: ViewUserComponent },
   { path: 'admin/view-all-users', component: ViewAllUserComponent },
-
-  { path: 'user/update/:id', component: UpdateUserComponent },
+  { path: 'admin/user/:userId/update', component: UpdateUserComponent },
 
   { path: 'admin/addbank', component: AddBankComponent },
   { path: 'admin/view-bank/:id', component: ViewBankComponent },
   { path: 'admin/view-all-banks', component: ViewAllBanksComponent },
-  { path: 'bank/update/:id', component: UpdateBankComponent },
-
-  { path: 'user/view-all-accounts', component: ViewAllAccountsComponent },
+  { path: 'admin/bank/:bankId/update', component: UpdateBankComponent },
+  { path: 'admin/bank/settlement', component: SettlementComponent},
 
 
   { path: 'user/dashboard', component: UserdashboardComponent },
-  { path: 'user/account/passbook/:accountId', component: PassbookComponent },
-  { path: 'user/account/deposite', component: DepositeComponent },
-  { path: 'user/account/withdraw', component: WithdrawComponent }
+  { path: 'user/view-all-accounts', component: ViewAllAccountsComponent },
+  { path: 'user/account/:accountId/passbook', component: PassbookComponent },
+  { path: 'user/account/:accountId/deposit', component: DepositeComponent },
+  { path: 'user/account/:accountId/withdraw', component: WithdrawComponent },
+  { path: 'user/account/:accountId/transfer', component: TransferComponent}
 
 ];
 

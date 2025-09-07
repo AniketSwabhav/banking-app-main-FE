@@ -46,4 +46,12 @@ export class BankService {
     const headers = this.getAuthHeaders();
     return this.http.delete<any>(url, { headers: headers });
   }
+
+  getSettlementRecords(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.URL}/settlement`, {
+      headers: headers,
+      observe: 'response'
+    });
+  }
 }

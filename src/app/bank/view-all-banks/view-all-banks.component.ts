@@ -1,27 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BankService } from 'src/app/service/bank.service';
 import { HttpParams } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationComponent } from 'src/app/shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-view-all-banks',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent, FormsModule],
   templateUrl: './view-all-banks.component.html',
   styleUrls: ['./view-all-banks.component.css']
 })
-export class ViewAllBanksComponent {
+export class ViewAllBanksComponent implements OnInit {
 
-  userData: any = [];
-  userCount: number = 0;
-
-
-  //  //Forms
-  // searchForm!: FormGroup
-  // searchFormValue: any = null
+  bankData: any = [];
+  bankCount: number = 0;
+  filteredBanks: any[] = [];
+  searchTerm: string = '';
   selectedButtonIndex: number | null = null;
 
   //Pagination
@@ -37,29 +34,37 @@ export class ViewAllBanksComponent {
   ) { }
 
   ngOnInit(): void {
-    this.loadBanks();
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.searchTerm = params['search'] || '';
+      this.offset = parseInt(params['offset'] || '0');
+      this.limit = parseInt(params['limit'] || '5');
+
+      this.loadBanks();
+    });
   }
 
   loadBanks() {
     const params = new HttpParams()
       .set('limit', this.limit.toString())
       .set('offset', this.offset.toString());
-
-    let queryPramas: any = {
-      limit: this.limit,
-      offset: this.offset
-    }
     this.router.navigate([], {
-      queryParams: queryPramas,
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        limit: this.limit,
+        offset: this.offset,
+        search: this.searchTerm || null,
+      },
+      queryParamsHandling: 'merge',
     });
 
     this.banksData.viewAllBanks(params).subscribe({
       next: (data: any) => {
         console.log("Data from viewAllBanks: ", data);
-        this.userData = data.body;
+        this.bankData = data.body;
         this.totalBankRecords = parseInt(data.headers.get("X-Total-Count"));
-        console.log("User Data=======>>>>>>", this.userData);
+        console.log("User Data=======>>>>>>", this.bankData);
         console.log("Total Bank Records: ", this.totalBankRecords);
+        this.applySearchFilter();
       },
       error: (err: any) => {
         console.error(err);
@@ -67,9 +72,8 @@ export class ViewAllBanksComponent {
     });
   }
 
-  onUpdateClick(userID: string) {
-    console.log("from view, id: ", userID);
-    this.router.navigate(['/bank/update', userID]);
+  onUpdateClick(bankID: string) {
+    this.router.navigate(['admin/bank', bankID, 'update']);
   }
 
   onDisableClick(bankID: string) {
@@ -83,7 +87,7 @@ export class ViewAllBanksComponent {
 
       this.banksData.updateBank(bankID, bank).subscribe(() => {
         alert(`bank ${bankID} has been disabled.`);
-        const localUser = this.userData.find((u: any) => u.id === bankID);
+        const localUser = this.bankData.find((u: any) => u.id === bankID);
         if (localUser) localUser.isActive = false;
       });
     });
@@ -91,10 +95,10 @@ export class ViewAllBanksComponent {
 
   onReviveClick(bankID: string) {
     this.banksData.viewBank(bankID).subscribe(bank => {
-      bank.isActive = true; 
+      bank.isActive = true;
       this.banksData.updateBank(bankID, bank).subscribe(() => {
         alert(`Bank ${bankID} has been revived.`);
-        const localUser = this.userData.find((u: any) => u.id === bankID);
+        const localUser = this.bankData.find((u: any) => u.id === bankID);
         if (localUser) localUser.isActive = true;
       });
     });
@@ -120,5 +124,43 @@ export class ViewAllBanksComponent {
     this.offset = (pageNumber - 1);
     console.log(pageNumber, this.offset);
     this.loadBanks();
+  }
+
+  applySearchFilter(): void {
+    const term = this.searchTerm.toLowerCase().trim();
+
+    if (!term) {
+      this.filteredBanks = [...this.bankData]; // Show all if no search
+      return;
+    }
+
+    this.filteredBanks = this.bankData.filter((bank: any) =>
+      bank.fullName.toLowerCase().includes(term)
+    );
+  }
+
+
+  resetSearch(): void {
+    this.searchTerm = '';
+    this.offset = 0;
+    this.currentPage = 0;
+    this.updateQueryParams();
+    this.applySearchFilter();
+  }
+
+  updateQueryParams(): void {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        search: this.searchTerm || null,
+        offset: this.offset,
+        limit: this.limit
+      },
+      queryParamsHandling: 'merge',
+    });
+
+    this.offset = 0;
+    this.currentPage = 0;
+    this.applySearchFilter();
   }
 }

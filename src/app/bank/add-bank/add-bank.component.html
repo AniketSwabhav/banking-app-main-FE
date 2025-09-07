@@ -10,49 +10,19 @@
 
                         <div class="mb-3">
                             <label for="fname" class="form-label">Full Name</label>
-                            <input type="text" id="fname" class="form-control" formControlName="fullName"
-                                placeholder="eg. Axis bank" />
-                        </div>
-
-                        <!-- <div class="mb-3">
-                            <label for="lname" class="form-label">Last Name</label>
-                            <input type="text" id="lname" class="form-control" formControlName="lastName"
-                                placeholder="Enter your last name" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="lname" class="form-label"><strong><span class="red"></span> Phone
-                                    Number</strong></label>
-                            <input type="text" id="pNumber" class="form-control" formControlName="phoneNo"
-                                placeholder="eg: 9123456780" />
-                            <div class="alert alert-danger" *ngIf="(addUser.get('phoneNo')?.touched || addUser.get('phoneNo')?.dirty)
-                                                   && addUser.get('phoneNo')?.invalid">
-                                <div *ngIf="addUser.get('phoneNo')?.errors?.['pattern']">
-                                    Contact must be a valid 10-digit number
-                                </div>
+                            <input type="text" id="fname" class="form-control" formControlName="fullName"placeholder="e.g. Axis Bank" />
+                            <div class="alert alert-danger mt-2"
+                                *ngIf="addBank.get('fullName')?.touched && addBank.get('fullName')?.invalid">
+                                <div *ngIf="addBank.get('fullName')?.errors?.['required']">Full Name is required.</div>
+                                <div *ngIf="addBank.get('fullName')?.errors?.['maxlength']">Full Name cannot exceed 50
+                                    characters.</div>
+                                <div *ngIf="addBank.get('fullName')?.errors?.['pattern']">Only letters and spaces are
+                                    allowed.</div>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" id="email" class="form-control" formControlName="Email"
-                                placeholder="Enter your email" />
-                        </div> -->
-
-                        <!-- <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="input-group">
-                                <input [type]="showPassword ? 'text' : 'password'" id="password" class="form-control"
-                                    formControlName="passWord" placeholder="Enter your password" />
-                                <span class="input-group-text" (click)="togglePasswordVisibility()"
-                                    style="cursor: pointer;">
-                                    <i class="fa {{ showPassword ? 'fa-eye-slash' : 'fa-eye' }}"></i>
-                                </span>
-                            </div>
-                        </div> -->
 
                         <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-success">Register</button>
+                            <button type="submit" class="btn btn-success" [disabled]="addBank.invalid">Register</button>
                             <button type="reset" class="btn btn-outline-secondary">Reset</button>
                             <a routerLink="/admin/view-all-users" class="btn btn-outline-primary">
                                 <i class="fa fa-angle-double-left"></i> Back

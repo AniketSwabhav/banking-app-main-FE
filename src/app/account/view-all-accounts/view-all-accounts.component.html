@@ -18,6 +18,20 @@
         </div>
     </div>
 
+    <!-- Search Form -->
+    <div class="row mb-3 justify-content-center align-items-center">
+        <div class="col-md-6">
+            <input type="text" class="form-control" placeholder="Search by Account Number" [(ngModel)]="searchTerm"
+                (ngModelChange)="applySearchFilter(); updateQueryParams()" />
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-secondary" (click)="resetSearch()" [disabled]="!searchTerm">
+                Reset
+            </button>
+        </div>
+    </div>
+
+
     <!-- Loading -->
     <div *ngIf="loading" class="text-center">
         <div class="spinner-border text-primary" role="status">
@@ -30,42 +44,54 @@
         {{ error }}
     </div>
 
+
     <!-- No accounts -->
-    <div *ngIf="!loading && accounts.length === 0" class="alert alert-secondary text-center">
+    <div *ngIf="!loading && filteredAccounts.length === 0" class="alert alert-secondary text-center">
         No accounts found.
     </div>
+
 
     <app-pagination class=" p-0 m-0" [items]="accounts"
         [totalItems]='selectedButtonIndex ? totalAccountRecords : totalAccountRecords' [limit]="limit" [offset]="offset"
         (pageChange)="changePage($event)" />
 
     <!-- Accounts list -->
-<div *ngFor="let account of accounts" class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Account No: {{ account.accountNo }}</h5>
-        <p class="card-text mb-1"><strong>Bank:</strong> {{ account.bank?.fullName }}</p>
-        <p class="card-text mb-1"><strong>Balance:</strong> ₹{{ account.balance }}</p>
-        <p class="card-text mb-3">
-            <strong>Status:</strong>
-            <span class="badge" [ngClass]="account.isActive ? 'bg-success' : 'bg-danger'">
-                {{ account.isActive ? 'Active' : 'Inactive' }}
-            </span>
-        </p>
-        
-        <!-- Buttons -->
-        <div class="d-flex gap-2 flex-wrap">
-            <button class="btn btn-outline-primary" (click)="goToPassbook(account.id)">
-                View Passbook
-            </button>
-            <button class="btn btn-outline-success" (click)="goToDeposit()">
-                Deposit
-            </button>
-            <button class="btn btn-outline-warning" (click)="goToWithdraw()">
-                Withdraw
-            </button>
+    <div *ngFor="let account of filteredAccounts" class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Account No: {{ account.accountNo }}</h5>
+            <p class="card-text mb-1"><strong>Bank:</strong> {{ account.bank?.fullName }}</p>
+            <p class="card-text mb-1"><strong>Balance:</strong> ₹{{ account.balance }}</p>
+            <p class="card-text mb-3">
+                <strong>Status:</strong>
+                <span class="badge" [ngClass]="account.isActive ? 'bg-success' : 'bg-danger'">
+                    {{ account.isActive ? 'Active' : 'Inactive' }}
+                </span>
+            </p>
+
+            <div class="d-flex gap-2 flex-wrap">
+                <ng-container *ngIf="account.isActive; else disabledActions">
+                    <button class="btn btn-outline-primary" (click)="goToPassbook(account.id)">View Passbook</button>
+                    <button class="btn btn-outline-success" (click)="goToDeposit(account.id)">Deposit</button>
+                    <button class="btn btn-outline-warning" (click)="goToWithdraw(account.id)">Withdraw</button>
+                    <button class="btn btn-outline-secondary" (click)="goToTransfer(account.id)">Transfer Money</button>
+                    <button class="btn btn-sm btn-danger" (click)="onDeleteAccount(account.id)">
+                        Delete
+                    </button>
+                    <button class="btn btn-sm btn-warning" (click)="onDisableAccount(account.id)">
+                        Disable
+                    </button>
+                </ng-container>
+
+                <ng-template #disabledActions>
+                    <button class="btn btn-sm btn-success" (click)="onReviveAccount(account.id)">
+                        Revive
+                    </button>
+                    <button class="btn btn-sm btn-danger" disabled>Delete</button>
+                </ng-template>
+            </div>
         </div>
     </div>
-</div>
+
 
 
 

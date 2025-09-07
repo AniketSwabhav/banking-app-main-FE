@@ -3,7 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountService } from 'src/app/service/account.service';
 import { BankService } from 'src/app/service/bank.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from 'src/app/shared/pagination/pagination.component';
 import { HttpParams } from '@angular/common/http';
@@ -20,11 +20,14 @@ export class ViewAllAccountsComponent implements OnInit {
   private accountService = inject(AccountService);
   private bankService = inject(BankService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   accounts: any[] = [];
+  filteredAccounts: any[] = [];
   banks: any[] = [];
 
   selectedBankId: string = '';
+  searchTerm: string = '';
   loading = true;
   error: string | null = null;
 
@@ -37,8 +40,15 @@ export class ViewAllAccountsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.loadAccounts();
-    this.loadBanks();
+    this.route.queryParams.subscribe(params => {
+      this.limit = +params['limit'] || 5;
+      this.offset = +params['offset'] || 0;
+      this.searchTerm = params['search'] || '';
+      this.currentPage = this.offset + 1;
+
+      this.loadAccounts();
+      this.loadBanks();
+    });
   }
 
   loadAccounts(): void {
@@ -47,19 +57,21 @@ export class ViewAllAccountsComponent implements OnInit {
     const params = new HttpParams()
       .set('limit', this.limit.toString())
       .set('offset', this.offset.toString());
-
-    let queryPramas: any = {
-      limit: this.limit,
-      offset: this.offset
-    }
     this.router.navigate([], {
-      queryParams: queryPramas,
+      relativeTo: this.route,
+      queryParams: {
+        limit: this.limit,
+        offset: this.offset,
+        search: this.searchTerm || null,
+      },
+      queryParamsHandling: 'merge',
     });
 
     this.accountService.viewAllAccountsOfUser(params).subscribe({
       next: (res) => {
         this.accounts = res.body || [];
         this.totalAccountRecords = parseInt(res.headers.get('X-Total-Count') || '0');
+        this.applySearchFilter();
         this.loading = false;
       },
       error: (err) => {
@@ -98,25 +110,94 @@ export class ViewAllAccountsComponent implements OnInit {
     });
   }
 
-  goToPassbook(accountId: string): void {
-    this.router.navigate([`/user/account/passbook/${accountId}`]);
+  goToPassbook(accountID: string): void {
+    this.router.navigate(['user/account', accountID, 'passbook']);
+  }
+
+  goToDeposit(accountID: string): void {
+    this.router.navigate(['user/account', accountID, 'deposit']);
+  }
+
+  goToWithdraw(accountID: string): void {
+    this.router.navigate(['user/account', accountID, 'withdraw']);
+  }
+
+  goToTransfer(accountID: string): void {
+    this.router.navigate(['user/account', accountID, 'transfer']);
+  }
+
+  onDisableAccount(accountId: string) {
+    this.accountService.viewAccount(accountId).subscribe((account) => {
+      account.isActive = false;
+      this.accountService.updateAccount(accountId, account).subscribe(() => {
+        alert(`Account has been disabled.`);
+        const localUser = this.accounts.find((a: any) => a.id === accountId);
+        if (localUser) localUser.isActive = false;
+      })
+    });
+  }
+
+  onReviveAccount(accountId: string) {
+    this.accountService.viewAccount(accountId).subscribe((account) => {
+      account.isActive = true;
+      this.accountService.updateAccount(accountId, account).subscribe(() => {
+        alert(`Account has been Enabled.`);
+        const localUser = this.accounts.find((a: any) => a.id === accountId);
+        if (localUser) localUser.isActive = true;
+      })
+    });
+  }
+
+  onDeleteAccount(accountId: string) {
+    const confirmed = confirm('Are you sure you want to delete this account?');
+    if (confirmed) {
+      this.accountService.deleteAccount(accountId).subscribe({
+        next: () => {
+          alert('Account deleted.');
+          this.loadAccounts();
+        },
+        error: (err) => console.error('Delete failed:', err)
+      });
+    }
   }
 
   changePage(pageNumber: number): void {
-    console.log(pageNumber);
 
     this.currentPage = pageNumber - 1;
     this.offset = (pageNumber - 1);
-    console.log(pageNumber, this.offset);
+
     this.loadAccounts();
   }
 
-  goToDeposit(): void {
-    this.router.navigate(['/user/account/deposite']);
+  applySearchFilter(): void {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredAccounts = this.accounts.filter(account =>
+      account.accountNo.toLowerCase().includes(term)
+    );
   }
 
-  goToWithdraw(): void {
-    this.router.navigate(['/user/account/withdraw']);
+  resetSearch(): void {
+    this.searchTerm = '';
+    this.offset = 0;
+    this.currentPage = 0;
+    this.updateQueryParams();
+    this.applySearchFilter();
+  }
+
+  updateQueryParams(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: this.searchTerm || null,
+        offset: this.offset,
+        limit: this.limit
+      },
+      queryParamsHandling: 'merge',
+    });
+
+    this.offset = 0;
+    this.currentPage = 0;
+    this.applySearchFilter();
   }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from 'src/app/service/user.service';
 import { HttpParams } from '@angular/common/http';
@@ -9,15 +9,16 @@ import { PaginationComponent } from 'src/app/shared/pagination/pagination.compon
 @Component({
   selector: 'app-view-all-user',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent, FormsModule],
   templateUrl: './view-all-user.component.html',
   styleUrls: ['./view-all-user.component.css']
 })
 export class ViewAllUserComponent implements OnInit {
 
   userData: any = [];
+  filteredusers: any[] = [];
   userCount: number = 0;
-  
+
 
   //Pagination
   limit: number = 5
@@ -26,6 +27,8 @@ export class ViewAllUserComponent implements OnInit {
   totalUserRecords: number = 0
   selectedButtonIndex: number | null = null;
 
+  searchTerm: string = '';
+
   constructor(
     private router: Router,
     private usersData: UserService,
@@ -33,20 +36,27 @@ export class ViewAllUserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadUsers();
+   this.activatedRoute.queryParams.subscribe(params => {
+      this.searchTerm = params['search'] || '';
+      this.offset = parseInt(params['offset'] || '0');
+      this.limit = parseInt(params['limit'] || '5');
+
+      this.loadUsers();
+    });
   }
 
   loadUsers() {
-    const params = new HttpParams()
+   const params = new HttpParams()
       .set('limit', this.limit.toString())
       .set('offset', this.offset.toString());
-
-    let queryPramas: any = {
-      limit: this.limit,
-      offset: this.offset
-    }
     this.router.navigate([], {
-      queryParams: queryPramas,
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        limit: this.limit,
+        offset: this.offset,
+        search: this.searchTerm || null,
+      },
+      queryParamsHandling: 'merge',
     });
 
     this.usersData.viewAllUsers(params).subscribe({
@@ -56,6 +66,7 @@ export class ViewAllUserComponent implements OnInit {
         this.totalUserRecords = parseInt(data.headers.get("X-Total-Count"));
         console.log("User Data=======>>>>>>", this.userData);
         console.log("Total User Records: ", this.totalUserRecords);
+        this.applySearchFilter();
       },
       error: (err: any) => {
         console.error(err);
@@ -64,14 +75,13 @@ export class ViewAllUserComponent implements OnInit {
   }
 
   onUpdateClick(userID: string) {
-    this.router.navigate(['/user/update', userID]);
+    this.router.navigate(['admin/user', userID, 'update']);
   }
 
   onDisableClick(userID: string) {
     this.usersData.viewUser(userID).subscribe(user => {
       user.isActive = false;
 
-      // Check required fields
       if (!user.firstName || !user.lastName || !user.phoneNo) {
         alert("Missing required user data");
         return;
@@ -97,17 +107,17 @@ export class ViewAllUserComponent implements OnInit {
   }
 
   onDeleteClick(userID: string) {
-  const confirmed = window.confirm("Are you sure you want to delete this user?");
-  
-  if (confirmed) {
-    this.usersData.deleteUser(userID).subscribe(() => {
-      alert(`User ${userID} has been deleted.`);
-      this.loadUsers();
-    });
-  } else {
-    console.log("User deletion canceled.");
+    const confirmed = window.confirm("Are you sure you want to delete this user?");
+
+    if (confirmed) {
+      this.usersData.deleteUser(userID).subscribe(() => {
+        alert(`User ${userID} has been deleted.`);
+        this.loadUsers();
+      });
+    } else {
+      console.log("User deletion canceled.");
+    }
   }
-}
 
 
 
@@ -120,28 +130,39 @@ export class ViewAllUserComponent implements OnInit {
     this.loadUsers();
   }
 
-  //   searchQueriesStatus(): void {
-  //   // Handles the case for form reset
-  //   if (this.searchForm.get('limit')?.value === null || this.searchForm.get('limit')?.value === 0) {
-  //     this.searchForm.get('limit')?.setValue(20)
-  //     this.searchForm.get('offset')?.setValue(0)
-  //   }
+  applySearchFilter(): void {
+  const term = this.searchTerm.toLowerCase();
+  this.filteredusers = this.userData.filter((user: any) =>
+    user.credential.email.toLowerCase().includes(term)
+  );
+}
 
-  //   this.searchFormValue = { ...this.searchForm.value }
 
-  //   for (let field in this.searchFormValue) {
-  //     if (this.searchFormValue[field] === null || this.searchFormValue[field] === "") {
-  //       delete this.searchFormValue[field];
-  //     }
-  //   }
 
-  //   this.router.navigate([], {
-  //     relativeTo: this.activatedRoute,
-  //     queryParams: this.searchFormValue,
-  //   })
+  resetSearch(): void {
+    this.searchTerm = '';
+    this.offset = 0;
+    this.currentPage = 0;
+    this.updateQueryParams();
+    this.applySearchFilter();
+  }
 
-  //   this.loadUsers();
-  // }
+  updateQueryParams(): void {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        search: this.searchTerm || null,
+        offset: this.offset,
+        limit: this.limit
+      },
+      queryParamsHandling: 'merge',
+    });
+
+    this.offset = 0;
+    this.currentPage = 0;
+    this.applySearchFilter();
+  }
+
 
 
 }

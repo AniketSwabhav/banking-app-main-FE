@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from 'src/app/service/user.service';
 import { Router, RouterModule } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-user',
@@ -19,14 +19,19 @@ export class AddUserComponent {
   ) { }
 
   addUser = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    phoneNo: new FormControl(''),
-    Email: new FormControl(''),
-    passWord: new FormControl(''),
-  });
+  firstName: new FormControl('', [Validators.required,Validators.maxLength(50)]),
+  lastName: new FormControl('', [Validators.required,Validators.maxLength(50)]),
+  phoneNo: new FormControl('', [ Validators.required,Validators.pattern(/^[1-9]\d{9}$/)]),
+  Email: new FormControl('', [Validators.required,Validators.email]),
+  passWord: new FormControl('', [Validators.required,Validators.minLength(8)])});
 
   showPassword: boolean = false;
+
+  onPhoneInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  input.value = input.value.replace(/[^0-9]/g, '').slice(0, 10);
+  this.addUser.get('phoneNo')?.setValue(input.value);
+}
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
